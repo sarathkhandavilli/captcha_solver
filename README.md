@@ -46,7 +46,3 @@ python app.py
 2. Upload a CAPTCHA image
 3. The application will process the image and display the recognized text
 4. Click the "Copy" button to copy the recognized text to clipboard
-
-## License
-
-MIT License 
