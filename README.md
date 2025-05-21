@@ -1,6 +1,6 @@
 # CAPTCHA Solver
 
-A Flask-based web application that uses machine learning to solve CAPTCHA images.
+A Flask-based web application that uses machine learning to solve CAPTCHA images. This project is a simple web-based CAPTCHA solver built with Flask (Python web framework). Users can upload a CAPTCHA image through a web interface.
 
 ## Features
 
@@ -20,8 +20,8 @@ A Flask-based web application that uses machine learning to solve CAPTCHA images
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/captcha-solver.git
-cd captcha-solver
+git clone https://github.com/sarathkhandavilli/captcha_solver.git
+cd captcha_solver
 ```
 
 2. Create and activate virtual environment:
