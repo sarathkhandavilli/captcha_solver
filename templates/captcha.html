@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPTCHA Recognition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 min-h-screen flex items-center justify-center font-sans">
+
+    <div class="w-full max-w-2xl p-8 bg-white rounded-3xl shadow-2xl space-y-8">
+
+        {% if encoded_image %}
+        <!-- Recognized CAPTCHA -->
+        <div id="recognizedCaptchaSection" class="text-center animate-fade-in">
+            <h2 class="text-3xl font-bold text-gray-800">Recognized CAPTCHA</h2>
+            <img class="w-full h-auto rounded-xl shadow-xl mt-6" src="data:image/jpeg;base64,{{ encoded_image }}" alt="Uploaded Image">
+            <div class="flex justify-between items-center bg-gray-900 text-white text-lg font-medium p-4 rounded-xl shadow-md mt-6">
+                <span id="rcText">{{ rc }}</span>
+                <button onclick="copyText()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md transition">Copy</button>
+            </div>
+            <button onclick="showUploadForm()" class="mt-6 w-full py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-lg transition">
+                Upload Another CAPTCHA
+            </button>
+        </div>
+        {% endif %}
+
+        <!-- Example CAPTCHA -->
+        <div id="exampleCaptchaSection" class="text-center" {% if encoded_image %}style="display: none;"{% endif %}>
+            <h3 class="text-xl font-semibold text-gray-700">Example CAPTCHA</h3>
+            <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSYg9T7hQHa5ZkeLh0wRYuMtsdC73GDA7GtU0OjzZi4aBq9Fp1v"
+                 class="mx-auto mt-4 border-2 border-gray-300 rounded-lg shadow-md w-60 h-auto">
+            <p class="text-sm text-gray-600 mt-3">Upload a similar image for recognition.</p>
+        </div>
+
+        <!-- Upload Form -->
+        <div id="uploadFormSection" {% if encoded_image %}style="display: none;"{% endif %}>
+            <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Upload CAPTCHA</h1>
+            <form action="" method="post" enctype="multipart/form-data" class="space-y-6">
+                {% if error_message %}
+                <p class="text-red-500 text-center font-medium animate-pulse">{{ error_message }}</p>
+                {% endif %}
+                
+                <div class="flex flex-col items-center space-y-4">
+                    <label for="uploadInput" class="w-full flex items-center justify-center gap-2 py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg cursor-pointer shadow-lg transition">
+                        <span>Select CAPTCHA Image</span>
+                        <input type="file" id="uploadInput" accept="image/*" name="file" class="hidden">
+                    </label>
+
+                    <img id="uploadedImage" src="#" alt="Preview" class="hidden mt-4 rounded-lg border-2 border-gray-300 shadow-md max-w-xs">
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-xl transition">
+                    Submit
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        function copyText() {
+            const rcText = document.getElementById('rcText').textContent;
+            navigator.clipboard.writeText(rcText)
+                .then(() => alert("Text copied to clipboard!"))
+                .catch(err => console.error("Error copying text: ", err));
+        }
+
+        function showUploadForm() {
+            document.getElementById("recognizedCaptchaSection").style.display = "none";
+            document.getElementById("uploadFormSection").style.display = "block";
+            document.getElementById("exampleCaptchaSection").style.display = "block";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("uploadInput");
+            const img = document.getElementById("uploadedImage");
+            const exampleCaptchaSection = document.getElementById("exampleCaptchaSection");
+            const errorMsg = document.querySelector(".text-red-500");
+
+            input.addEventListener("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        img.src = e.target.result;
+                        img.classList.remove("hidden");
+                        exampleCaptchaSection.style.display = "none";
+                        if (errorMsg) errorMsg.style.display = "none";
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    img.classList.add("hidden");
+                    exampleCaptchaSection.style.display = "block";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
